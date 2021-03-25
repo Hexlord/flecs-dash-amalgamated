@@ -5,7 +5,7 @@ project(flecs-dash-amalgamated LANGUAGES C)
 
 option(FLECS_DASH_STATIC_LIBS "Build static flecs lib" ON)
 option(FLECS_DASH_PIC "Compile static flecs lib with position-independent-code (PIC)" ON)
-option(FLECS_DASH_SHARED_LIBS "Build shared flecs lib" ON)
+option(FLECS_DASH_SHARED_LIBS "Build shared flecs lib" OFF)
 option(FLECS_DASH_DEVELOPER_WARNINGS "Enable more warnings" OFF)
 
 if(NOT FLECS_DASH_STATIC_LIBS AND NOT FLECS_DASH_SHARED_LIBS)
@@ -56,6 +56,10 @@ if(FLECS_DASH_SHARED_LIBS)
         $<INSTALL_INTERFACE:include>)
     target_link_libraries (flecs-dash-amalgamated flecs)
 
+    if(WIN32)
+      target_link_libraries(flecs-dash-amalgamated wsock32 ws2_32)
+    endif()
+
     list(APPEND FLECS_DASH_TARGETS flecs-dash-amalgamated)
 endif()
 
@@ -76,6 +80,10 @@ if(FLECS_DASH_STATIC_LIBS)
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>)
     target_link_libraries (flecs-dash-amalgamated_static flecs)
+
+    if(WIN32)
+      target_link_libraries(flecs-dash-amalgamated_static wsock32 ws2_32)
+    endif()
 
     list(APPEND FLECS_DASH_TARGETS flecs-dash-amalgamated_static)
 endif()
